@@ -79,7 +79,7 @@ const Author = () => {
 
                 <div className="col-md-12">
                   <div className="de_tab tab_simple">
-                    <AuthorItems loading={true} /> {/* Show loading skeletons for AuthorItems */}
+                    <AuthorItems loading={true} />
                   </div>
                 </div>
               </div>
