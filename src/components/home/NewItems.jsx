@@ -22,7 +22,7 @@ const NewItems = () => {
   }, []);
 
   const getRemainingTime = (expiryDate) => {
-    if (!expiryDate) return null; // Return null if no expiration date is provided
+    if (!expiryDate) return null;
     const now = Date.now();
     const timeLeft = expiryDate - now;
     const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
