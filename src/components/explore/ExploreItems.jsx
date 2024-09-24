@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Skeleton from "../UI/Skeleton";
 import { Link } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const ExploreItems = () => {
   const [items, setItems] = useState([]);
@@ -25,6 +27,10 @@ const ExploreItems = () => {
         setLoading(false);
       });
   }, [filter]);
+
+  useEffect(() => {
+    AOS.init();
+  }, []);
 
   const getRemainingTime = (expiryDate) => {
     if (!expiryDate) return null;
@@ -76,7 +82,7 @@ const ExploreItems = () => {
               </div>
             </div>
           </div>
-        ))}
+        ))} 
       </div>
     );
   }
@@ -92,7 +98,13 @@ const ExploreItems = () => {
         </select>
       </div>
       {items.slice(0, visibleItems).map((item, index) => (
-        <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={index}>
+        <div 
+          className="col-lg-3 col-md-6 col-sm-6 col-xs-12" 
+          key={index} 
+          data-aos="fade-in"
+          data-aos-duration="1000"
+          data-aos-delay={index * 50}
+        >
           <div className="nft__item">
             <div className="author_list_pp">
               <Link to={`/author/${item.authorId}`}>
