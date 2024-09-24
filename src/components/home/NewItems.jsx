@@ -4,7 +4,7 @@ import axios from "axios";
 import OwlCarousel from "react-owl-carousel";
 import Skeleton from "../UI/Skeleton";
 
-const NewItems = ({ getRemainingTime }) => {
+const NewItems = () => {
   const [newItems, setNewItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -20,6 +20,16 @@ const NewItems = ({ getRemainingTime }) => {
         setLoading(false);
       });
   }, []);
+
+  const getRemainingTime = (expiryDate) => {
+    if (!expiryDate) return null; // Return null if no expiration date is provided
+    const now = Date.now();
+    const timeLeft = expiryDate - now;
+    const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+    const seconds = Math.floor((timeLeft / 1000) % 60);
+    return `${hours}h ${minutes}m ${seconds}s`;
+  };
 
   if (loading) {
     const skeletonCount = window.innerWidth < 800 ? 1 : window.innerWidth < 1000 ? 2 : 4;
