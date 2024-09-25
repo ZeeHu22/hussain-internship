@@ -11,6 +11,7 @@ const Author = () => {
   const [author, setAuthor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     const apiUrl = `https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=${authorId}`;
@@ -25,6 +26,15 @@ const Author = () => {
         setLoading(false);
       });
   }, [authorId]);
+
+  const handleFollow = () => {
+    if (isFollowing) {
+      setAuthor({ ...author, followers: author.followers - 1 });
+    } else {
+      setAuthor({ ...author, followers: author.followers + 1 });
+    }
+    setIsFollowing(!isFollowing);
+  };
 
   if (loading) {
     return (
@@ -79,7 +89,7 @@ const Author = () => {
 
                 <div className="col-md-12">
                   <div className="de_tab tab_simple">
-                    <AuthorItems loading={true} /> {/* Show loading skeletons for AuthorItems */}
+                    <AuthorItems loading={true} />
                   </div>
                 </div>
               </div>
@@ -133,8 +143,8 @@ const Author = () => {
                   <div className="profile_follow de-flex">
                     <div className="de-flex-col">
                       <div className="profile_follower">{author.followers} followers</div>
-                      <Link to="#" className="btn-main">
-                        Follow
+                      <Link to="#" className="btn-main" onClick={handleFollow}>
+                        {isFollowing ? 'Unfollow' : 'Follow'}
                       </Link>
                     </div>
                   </div>
