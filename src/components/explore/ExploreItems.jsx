@@ -11,6 +11,7 @@ const ExploreItems = () => {
   const [visibleItems, setVisibleItems] = useState(8);
   const [hasMoreItems, setHasMoreItems] = useState(true);
   const [filter, setFilter] = useState("");
+  const [countdowns, setCountdowns] = useState({});
 
   useEffect(() => {
     const apiUrl = `https://us-central1-nft-cloud-functions.cloudfunctions.net/explore${
@@ -32,10 +33,37 @@ const ExploreItems = () => {
     AOS.init();
   }, []);
 
+  useEffect(() => {
+    const updateCountdowns = () => {
+      const newCountdowns = {};
+      items.forEach((item) => {
+        if (item.expiryDate) {
+          const now = Date.now();
+          const timeLeft = item.expiryDate - now;
+          if (timeLeft <= 0) {
+            newCountdowns[item.id] = "Expired";
+          } else {
+            const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+            const seconds = Math.floor((timeLeft / 1000) % 60);
+            newCountdowns[item.id] = `${hours}h ${minutes}m ${seconds}s`;
+          }
+        } else {
+          newCountdowns[item.id] = "No Expiry Date";
+        }
+      });
+      setCountdowns(newCountdowns);
+    };
+    updateCountdowns();
+    const intervalId = setInterval(updateCountdowns, 1000);
+    return () => clearInterval(intervalId);
+  }, [items]);
+
   const getRemainingTime = (expiryDate) => {
-    if (!expiryDate) return null;
+    if (!expiryDate) return "Expired";
     const now = Date.now();
     const timeLeft = expiryDate - now;
+    if (timeLeft <= 0) return "Expired";
     const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
     const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
     const seconds = Math.floor((timeLeft / 1000) % 60);
@@ -117,11 +145,11 @@ const ExploreItems = () => {
               </Link>
             </div>
 
-            {item.expiryDate && (
-              <div className="de_countdown">
-                {getRemainingTime(item.expiryDate)}
-              </div>
-            )}
+            
+            <div className="de_countdown">
+              {getRemainingTime(item.expiryDate)}
+            </div>
+            
 
             <div className="nft__item_wrap">
               <Link to={`/item-details/${item.nftId}`}>
