@@ -14,6 +14,8 @@ const Author = () => {
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+    
     const apiUrl = `https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=${authorId}`;
 
     axios.get(apiUrl)
